@@ -3,6 +3,7 @@ package org.xenotek.redisviewer.controller;
 import org.xenotek.redisviewer.config.ServerConfig;
 import redis.clients.jedis.Jedis;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -65,6 +66,14 @@ public class Server {
 
     public Map<String,String> hgetAll(String key) {
         return client.hgetAll(key);
+    }
+
+    public Set<String> smembers(String key) {
+        return client.smembers(key);
+    }
+
+    public List<String> lrange(String key, long start, long end) {
+        return client.lrange(key, start, end);
     }
 
     public Long ttl(String key) {

@@ -11,10 +11,11 @@ public abstract class RedisView {
     private static final int DEFAULT_HEADING_SIZE = 16;
     private static final int DEFAULT_TEXT_SIZE = 13;
 
-    public static final String VIEW_NONE = "none";
+    public static final String VIEW_NONE   = "none";
     public static final String VIEW_STRING = "string";
-    public static final String VIEW_LIST = "list";
-    public static final String VIEW_HASH = "hash";
+    public static final String VIEW_LIST   = "list";
+    public static final String VIEW_HASH   = "hash";
+    public static final String VIEW_SET    = "set";
 
     public RedisView() {
         this(null, Long.valueOf(-1));

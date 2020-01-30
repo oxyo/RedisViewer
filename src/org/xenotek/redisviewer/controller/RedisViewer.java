@@ -1,15 +1,12 @@
 package org.xenotek.redisviewer.controller;
 
-import org.xenotek.redisviewer.ui.viewer.DetailPane;
+import org.xenotek.redisviewer.ui.viewer.*;
 import org.xenotek.redisviewer.ui.ServerBrowser;
 import org.xenotek.redisviewer.ui.StatusBar;
 import org.xenotek.redisviewer.ui.ToolBar;
 import org.xenotek.redisviewer.ui.event.ToolbarEvent;
 import org.xenotek.redisviewer.ui.event.ToolbarListener;
 import org.xenotek.redisviewer.ui.event.BrowserListener;
-import org.xenotek.redisviewer.ui.viewer.HashView;
-import org.xenotek.redisviewer.ui.viewer.RedisView;
-import org.xenotek.redisviewer.ui.viewer.StringView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,14 +58,25 @@ public class RedisViewer extends JFrame {
 
         @Override
         public void selectionChanged(String selectedKey) {
+            String type = server.getType(selectedKey);
             Long ttl = server.ttl(selectedKey);
 
-            switch (server.getType(selectedKey)) {
+            switch (type) {
                 case RedisView.VIEW_HASH:
                     detailPane.showDetails(new HashView(selectedKey, ttl, server.hgetAll(selectedKey)));
                     break;
+                case RedisView.VIEW_LIST:
+                    detailPane.showDetails(new ListView(selectedKey, ttl, server.lrange(selectedKey, 0, -1)));
+                    break;
+                case RedisView.VIEW_SET:
+                    detailPane.showDetails(new SetView(selectedKey, ttl, server.smembers(selectedKey)));
+                    break;
                 case RedisView.VIEW_STRING:
                     detailPane.showDetails(new StringView(selectedKey, ttl, server.get(selectedKey)));
+                    break;
+                default:
+                    System.err.println(
+                        String.format("unhandled type '%s' for selected key '%s'\n", type, selectedKey));
                     break;
             }
         }
