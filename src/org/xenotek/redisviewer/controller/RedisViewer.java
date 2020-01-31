@@ -1,18 +1,18 @@
 package org.xenotek.redisviewer.controller;
 
+import org.xenotek.redisviewer.ui.MenuBar;
+import org.xenotek.redisviewer.ui.event.*;
 import org.xenotek.redisviewer.ui.viewer.*;
 import org.xenotek.redisviewer.ui.ServerBrowser;
 import org.xenotek.redisviewer.ui.StatusBar;
 import org.xenotek.redisviewer.ui.ToolBar;
-import org.xenotek.redisviewer.ui.event.ToolbarEvent;
-import org.xenotek.redisviewer.ui.event.ToolbarListener;
-import org.xenotek.redisviewer.ui.event.BrowserListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Set;
 
 public class RedisViewer extends JFrame {
+    private MenuBar menuBar;
     private ToolBar toolBar;
     private ServerBrowser serverBrowser;
     private DetailPane detailPane;
@@ -21,12 +21,14 @@ public class RedisViewer extends JFrame {
 
     public RedisViewer(String title, int width, int height) {
         BrowserHandler searchHandler = new BrowserHandler();
+        MenubarHandler menubarHandler = new MenubarHandler();
         ToolbarHandler toolbarHandler = new ToolbarHandler();
 
         setTitle(title);
         setSize(width, height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        menuBar = new MenuBar();
         toolBar = new ToolBar();
         serverBrowser = new ServerBrowser();
         detailPane = new DetailPane();
@@ -34,8 +36,10 @@ public class RedisViewer extends JFrame {
         server = new Server();
 
         serverBrowser.setBrowserListener(searchHandler);
-        toolBar.setConnectListener(toolbarHandler);
+        menuBar.setMenubarListener(menubarHandler);
+        toolBar.setToolbarListener(toolbarHandler);
 
+        setJMenuBar(menuBar);
         add(toolBar, BorderLayout.PAGE_START);
         add(serverBrowser, BorderLayout.LINE_START);
         add(detailPane, BorderLayout.CENTER);
@@ -74,9 +78,23 @@ public class RedisViewer extends JFrame {
                 case RedisView.VIEW_STRING:
                     detailPane.showDetails(new StringView(selectedKey, ttl, server.get(selectedKey)));
                     break;
+                case RedisView.VIEW_NONE:
+                    // FIXME: key does not exist - show alert dialog
+                    break;
                 default:
                     System.err.println(
                         String.format("unhandled type '%s' for selected key '%s'\n", type, selectedKey));
+                    break;
+            }
+        }
+    }
+
+    private class MenubarHandler implements MenubarListener {
+        @Override
+        public void menubarAction(MenubarEvent e) {
+            switch (e) {
+                case CONFIG_CLICKED:
+                    System.out.println("TODO: display server config");
                     break;
             }
         }

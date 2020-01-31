@@ -20,15 +20,19 @@ public class ToolBar extends JPanel {
         connectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if (toolbarListener != null)
-                    toolbarListener.toolbarAction(ToolbarEvent.CONNECT_CLICKED);
+                sendToolbarEvent(ToolbarEvent.CONNECT_CLICKED);
             }
         });
 
         add(connectButton);
     }
 
-    public void setConnectListener(ToolbarListener toolbarListener) {
+    public void setToolbarListener(ToolbarListener toolbarListener) {
         this.toolbarListener = toolbarListener;
+    }
+
+    private void sendToolbarEvent(ToolbarEvent e) {
+        if (toolbarListener != null)
+            toolbarListener.toolbarAction(e);
     }
 }
