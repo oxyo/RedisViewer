@@ -8,8 +8,8 @@ public abstract class RedisView {
     private String key;
     private Long ttl;
 
-    private static final int DEFAULT_HEADING_SIZE = 16;
-    private static final int DEFAULT_TEXT_SIZE = 13;
+    private static final int DEFAULT_HEADING_SIZE = 14;
+    private static final int DEFAULT_TEXT_SIZE = 11;
 
     public static final String VIEW_NONE   = "none";
     public static final String VIEW_STRING = "string";
